@@ -170,17 +170,40 @@ export default defineComponent({
     onKeyDown() {
       if (this.isKeyDown) return;
       this.isKeyDown = true;
+      const now = Date.now();
       this.userSquares.add({
-        startTime: Date.now(),
+        startTime: now,
         endTime: 0,
       });
+
+      // find the closest black square start time
+      let bestDifference = Infinity;
+      this.squares.forEach(square => {
+        const difference = Math.abs(square.startTime - now);
+        if (difference < bestDifference) {
+          bestDifference = difference;
+        }
+      });
+      this.inputLagMillisList.add(bestDifference);
     },
 
     onKeyUp() {
       this.isKeyDown = false;
       const lastSquare = this.userSquares.last();
       if (lastSquare === undefined) return;
-      lastSquare.endTime = Date.now();
+
+      const now = Date.now();
+      lastSquare.endTime = now;
+
+      // find the closest black square end time
+      let bestDifference = Infinity;
+      this.squares.forEach(square => {
+        const difference = Math.abs(square.endTime - now);
+        if (difference < bestDifference) {
+          bestDifference = difference;
+        }
+      });
+      this.inputLagMillisList.add(bestDifference);
     },
   }
 });
