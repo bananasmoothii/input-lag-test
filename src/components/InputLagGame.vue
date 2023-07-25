@@ -10,6 +10,7 @@ type DataType = {
   squares: Collections.LinkedList<SquareTimes>,
   userSquares: Collections.LinkedList<SquareTimes>,
   isKeyDown: boolean,
+  cursorX: number,
   squareWidth: number,
   squareHeight: number,
   squarePadTop: number,
@@ -27,6 +28,7 @@ export default defineComponent({
       squares: new Collections.LinkedList<SquareTimes>(),
       userSquares: new Collections.LinkedList<SquareTimes>(),
       isKeyDown: false,
+      cursorX: 200, // will be overwritten
       squareWidth: 100,
       squareHeight: 30,
       squarePadTop: 10,
@@ -36,9 +38,6 @@ export default defineComponent({
   },
 
   computed: {
-    cursorX(): number {
-      return document.getElementById("game-canvas")!.clientWidth / 2;
-    },
     speedPixelsPerMillis(): number {
       return this.speed / 1000;
     },
@@ -114,6 +113,7 @@ export default defineComponent({
       const newHeight = window.innerHeight - htmlCanvas.getBoundingClientRect().top - 20;
       if (newHeight > 250) htmlCanvas.height = newHeight;
       else htmlCanvas.height = 250;
+      this.cursorX = htmlCanvas.clientWidth / 2;
     },
 
     update(ctx: CanvasRenderingContext2D) {
@@ -266,13 +266,13 @@ export default defineComponent({
       <small class="based-on">
         (Based on the last {{ inputLagMillisList.size() }} inputs)
       </small>
-      <span v-if="warnPressedBefore" class="ms-2 text-danger">You pressed too early!</span>
     </div>
     <button class="btn btn-primary" @click="clearInputLagMillisList">Clear (C)</button>
   </div>
   <div id="game-canvas-container">
     <canvas id="game-canvas"/>
   </div>
+  <span v-if="warnPressedBefore" class="warn-pressed-before text-danger fs-3">You pressed too early!</span>
 </template>
 
 <style lang="scss" scoped>
@@ -280,5 +280,10 @@ export default defineComponent({
 
 .speed-config-container {
   gap: map-get($spacers, 2);
+}
+
+.warn-pressed-before {
+  position: fixed;
+  bottom: map-get($spacers, 4);
 }
 </style>
