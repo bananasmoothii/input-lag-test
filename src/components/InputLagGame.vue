@@ -13,6 +13,7 @@ type DataType = {
   squareWidth: number,
   squareHeight: number,
   squarePadTop: number,
+  warnPressedBefore: boolean,
 }
 
 export default defineComponent({
@@ -21,13 +22,14 @@ export default defineComponent({
   data(): DataType {
     return {
       inputLagMillisList: new Collections.Queue<number>(),
-      speed: 200,
+      speed: 160,
       squares: new Collections.LinkedList<SquareTimes>(),
       userSquares: new Collections.LinkedList<SquareTimes>(),
       isKeyDown: false,
       squareWidth: 100,
       squareHeight: 30,
       squarePadTop: 10,
+      warnPressedBefore: false,
     }
   },
 
@@ -187,14 +189,18 @@ export default defineComponent({
       });
 
       // find the closest black square start time
-      let bestDifference = Infinity;
+      let bestDifferenceAbs = Infinity;
+      let bestDifferenceIsNegative = false;
       this.squares.forEach(square => {
         const difference = Math.abs(square.startTime - now);
-        if (difference < bestDifference) {
-          bestDifference = difference;
+        if (difference < bestDifferenceAbs) {
+          bestDifferenceAbs = difference;
+          bestDifferenceIsNegative = now < square.startTime;
         }
       });
-      this.inputLagMillisList.add(bestDifference);
+      this.warnPressedBefore = bestDifferenceIsNegative;
+      if (!bestDifferenceIsNegative)
+        this.inputLagMillisList.add(bestDifferenceAbs);
     },
 
     onKeyUp() {
@@ -206,14 +212,18 @@ export default defineComponent({
       lastSquare.endTime = now;
 
       // find the closest black square end time
-      let bestDifference = Infinity;
+      let bestDifferenceAbs = Infinity;
+      let bestDifferenceIsNegative = false;
       this.squares.forEach(square => {
         const difference = Math.abs(square.endTime - now);
-        if (difference < bestDifference) {
-          bestDifference = difference;
+        if (difference < bestDifferenceAbs) {
+          bestDifferenceAbs = difference;
+          bestDifferenceIsNegative = now < square.endTime;
         }
       });
-      this.inputLagMillisList.add(bestDifference);
+      this.warnPressedBefore = bestDifferenceIsNegative;
+      if (!bestDifferenceIsNegative)
+        this.inputLagMillisList.add(bestDifferenceAbs);
     },
 
     clearInputLagMillisList() {
@@ -240,6 +250,7 @@ export default defineComponent({
       <small class="based-on">
         (Based on the last {{ inputLagMillisList.size() }} inputs)
       </small>
+      <span v-if="warnPressedBefore" class="ms-2 text-danger">You pressed too early!</span>
     </div>
     <button class="btn btn-primary" @click="clearInputLagMillisList">Clear (C)</button>
   </div>
