@@ -3,7 +3,6 @@ import {defineComponent} from 'vue';
 import * as Collections from 'typescript-collections';
 
 type SquareTimes = { startTime: number, endTime: number };
-type SquareCoords = { startX: number, endX: number };
 
 type DataType = {
   inputLagMillisList: Collections.Queue<number>,
@@ -88,7 +87,7 @@ export default defineComponent({
       console.log("Resized canvas to " + htmlCanvas.width + "x" + htmlCanvas.height);
     },
 
-    update(ctx: CanvasRenderingContext2D, lastUpdateTime = 0) {
+    update(ctx: CanvasRenderingContext2D) {
 
       const canvasWidth = ctx.canvas.width;
       const canvasHeight = ctx.canvas.height;
@@ -142,7 +141,7 @@ export default defineComponent({
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
       }
 
-      window.requestAnimationFrame(() => this.update(ctx, now));
+      window.requestAnimationFrame(() => this.update(ctx));
     },
 
     timeToCoord(now: number, time: number): number {
