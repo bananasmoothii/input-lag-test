@@ -33,7 +33,7 @@ export default defineComponent({
 
   computed: {
     cursorX(): number {
-      return window.innerWidth / 4;
+      return window.innerWidth / 3;
     },
     speedPixelsPerMillis(): number {
       return this.speed / 1000;
@@ -66,6 +66,8 @@ export default defineComponent({
 
     document.onkeydown = this.onKeyDown;
     document.onkeyup = this.onKeyUp;
+    document.onmousedown = this.onKeyDown;
+    document.onmouseup = this.onKeyUp;
 
     this.update(context);
   },
@@ -84,7 +86,6 @@ export default defineComponent({
       const newHeight = window.innerHeight - htmlCanvas.getBoundingClientRect().top - 20;
       if (newHeight > 250) htmlCanvas.height = newHeight;
       else htmlCanvas.height = 250;
-      console.log("Resized canvas to " + htmlCanvas.width + "x" + htmlCanvas.height);
     },
 
     update(ctx: CanvasRenderingContext2D) {
@@ -103,15 +104,20 @@ export default defineComponent({
           endTime: now + squareWidthTimeMillis,
         });
       }
-      while (this.timeToCoord(now, this.squares.last()!.endTime) < canvasWidth) {
+      let lastEndTime = this.squares.last()!.endTime;
+      while (this.timeToCoord(now, lastEndTime) < canvasWidth) {
         this.squares.add({
-          startTime: this.squares.last()!.endTime + squareWidthTimeMillis,
-          endTime: this.squares.last()!.endTime + 2 * squareWidthTimeMillis,
+          startTime: lastEndTime + squareWidthTimeMillis,
+          endTime: lastEndTime + 2 * squareWidthTimeMillis,
         });
+        lastEndTime += 2 * squareWidthTimeMillis;
       }
       // Remove squares that are off the screen.
       while (this.timeToCoord(now, this.squares.first()!.endTime) < 0) {
         this.squares.removeElementAtIndex(0);
+      }
+      while (this.userSquares.size() > 1 && this.timeToCoord(now, this.userSquares.first()!.endTime) < 0) {
+        this.userSquares.removeElementAtIndex(0);
       }
 
       // Draw a vertical line in the middle: the "cursor".
@@ -122,8 +128,9 @@ export default defineComponent({
       ctx.stroke();
 
       let squareOnCursor = false;
+      const squareHeight = this.squareHeight;
 
-      // Draw the black squares, each 100px wide and 30px tall.
+      // Draw the black squares
       // Stop drawing them when they reach the right edge of the canvas.
       ctx.fillStyle = "#1F1D1A";
       this.squares.forEach(square => {
@@ -132,8 +139,15 @@ export default defineComponent({
         if (startX <= this.cursorX && this.cursorX <= endX) {
           squareOnCursor = true;
         }
-        //console.log(square.startTime, square.endTime, startX, endX);
-        ctx.fillRect(startX, this.squarePadTop, endX - startX, this.squareHeight);
+        ctx.fillRect(startX, this.squarePadTop, endX - startX, squareHeight);
+      });
+
+      // Draw the user's squares
+      ctx.fillStyle = "#FFB81F";
+      this.userSquares.forEach(square => {
+        const startX = this.timeToCoord(now, square.startTime);
+        const endX = square.endTime ? this.timeToCoord(now, square.endTime) : this.cursorX;
+        ctx.fillRect(startX, this.squarePadTop * 2 + squareHeight, endX - startX, squareHeight);
       });
 
       if (squareOnCursor) {
@@ -167,9 +181,6 @@ export default defineComponent({
       const lastSquare = this.userSquares.last();
       if (lastSquare === undefined) return;
       lastSquare.endTime = Date.now();
-      if (this.userSquares.size() > 4) {
-        this.userSquares.removeElementAtIndex(0);
-      }
     },
   }
 });
