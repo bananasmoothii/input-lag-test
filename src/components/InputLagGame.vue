@@ -205,6 +205,14 @@ export default defineComponent({
       });
       this.inputLagMillisList.add(bestDifference);
     },
+
+    clearInputLagMillisList() {
+      this.inputLagMillisList.clear();
+      setTimeout(() => {
+        this.inputLagMillisList.clear();
+        document.getElementById("speed-slider")!.focus();
+      }, 1000);
+    },
   }
 });
 </script>
@@ -215,10 +223,15 @@ export default defineComponent({
     <input id="speed-slider" v-model="speed" class="form-range" max="1000" min="10" step="1" type="range">
   </div>
 
-  <h3>Average input lag: <strong>{{ inputLagMillisString }} ms</strong></h3>
-  <p>
-    Based on the last {{ inputLagMillisList.size() }} inputs.
-  </p>
+  <div class="d-flex justify-content-between align-items-center my-3">
+    <div class="d-flex align-items-center">
+      <h3 class="me-2">Average input lag: <strong>{{ inputLagMillisString }} ms</strong></h3>
+      <small class="based-on">
+        (Based on the last {{ inputLagMillisList.size() }} inputs)
+      </small>
+    </div>
+    <button class="btn btn-primary" @click="clearInputLagMillisList">Clear</button>
+  </div>
   <div id="game-canvas-container">
     <canvas id="game-canvas"/>
   </div>
