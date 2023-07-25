@@ -33,7 +33,7 @@ export default defineComponent({
 
   computed: {
     cursorX(): number {
-      return window.innerWidth / 3;
+      return document.getElementById("game-canvas")!.clientWidth / 2;
     },
     speedPixelsPerMillis(): number {
       return this.speed / 1000;
@@ -64,8 +64,18 @@ export default defineComponent({
     this.resizeCanvas();
     window.addEventListener("resize", this.resizeCanvas);
 
-    document.onkeydown = this.onKeyDown;
-    document.onkeyup = this.onKeyUp;
+    document.onkeydown = (event) => {
+      // if key is C, clear the inputLagMillisList
+      if (event.key === "c") {
+        this.clearInputLagMillisList();
+        return;
+      }
+      this.onKeyDown();
+    };
+    document.onkeyup = (event) => {
+      if (event.key === "c") return;
+      this.onKeyUp();
+    };
     document.onmousedown = this.onKeyDown;
     document.onmouseup = this.onKeyUp;
 
@@ -208,6 +218,7 @@ export default defineComponent({
 
     clearInputLagMillisList() {
       this.inputLagMillisList.clear();
+      this.userSquares.clear();
       setTimeout(() => {
         this.inputLagMillisList.clear();
         document.getElementById("speed-slider")!.focus();
@@ -230,7 +241,7 @@ export default defineComponent({
         (Based on the last {{ inputLagMillisList.size() }} inputs)
       </small>
     </div>
-    <button class="btn btn-primary" @click="clearInputLagMillisList">Clear</button>
+    <button class="btn btn-primary" @click="clearInputLagMillisList">Clear (C)</button>
   </div>
   <div id="game-canvas-container">
     <canvas id="game-canvas"/>
