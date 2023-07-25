@@ -1,0 +1,41 @@
+$body-bg: #EDDFC9;
+$light: #F6CC74;
+$primary: #FFB81F;
+
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap');
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: 'Bree Serif', serif;
+}
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+.navbar-nav {
+  .nav-link {
+    border-radius: 7px;
+    padding-right: $navbar-nav-link-padding-x;
+    padding-left: $navbar-nav-link-padding-x;
+
+    &.active {
+      background-color: $gray-400;
+    }
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-#{$color}:focus, .btn-outline-#{$color}:focus {
+    box-shadow: tint-color($value, 80%) 0 0 0 5px;
+  }
+}
+
+code {
+  background-color: $gray-200;
+  border-radius: 3px;
+  padding: 0.2em 0.4em;
+  border: $gray-400 solid 1px;
+  position: relative;
+}
+
+
+@import "bootstrap/scss/bootstrap";

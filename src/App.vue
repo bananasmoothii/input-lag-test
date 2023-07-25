@@ -1,30 +1,21 @@
+<script lang="ts">
+
+</script>
+
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <nav class="navbar bg-light">
+    <div class="container-fluid">
+      <RouterLink class="navbar-brand" to="/">
+        <img alt="Bootstrap" height="24" src="@/assets/logo.svg" width="30">
+        Input Lag Test
+      </RouterLink>
+    </div>
   </nav>
-  <router-view/>
+  <div class="router-view  mx-auto px-5 mt-4">
+    <RouterView/>
+  </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+@import "scss/custom";
 </style>
