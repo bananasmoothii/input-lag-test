@@ -6,8 +6,9 @@
     This test is not very precise, as it takes <i>you</i> into account. Try to be as consistent as possible.
   </p>
   <p>
-    <strong>How to use:</strong> Press any button when the cursor gets on a black square and the area turns darker
-    release when the cursor is not on a black square. The yellow squares are when you actually pressed the button.
+    <strong>How to use:</strong> Press any button when a black rectangle is on the middle line (and the area turns
+    darker), release the button or your finger when the rectangle isn't on the middle line anymore. The yellow
+    rectangles show when you actually pressed or tapped the button.
   </p>
 
   <InputLagGame/>

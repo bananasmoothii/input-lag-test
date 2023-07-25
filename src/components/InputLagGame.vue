@@ -14,6 +14,7 @@ type DataType = {
   squareHeight: number,
   squarePadTop: number,
   warnPressedBefore: boolean,
+  isMobile: boolean,
 }
 
 export default defineComponent({
@@ -30,6 +31,7 @@ export default defineComponent({
       squareHeight: 30,
       squarePadTop: 10,
       warnPressedBefore: false,
+      isMobile: false,
     }
   },
 
@@ -78,8 +80,22 @@ export default defineComponent({
       if (event.key === "c") return;
       this.onKeyUp();
     };
-    document.onmousedown = this.onKeyDown;
-    document.onmouseup = this.onKeyUp;
+    document.onmousedown = () => {
+      if (this.isMobile) return;
+      this.onKeyDown();
+    }
+    document.onmouseup = () => {
+      if (this.isMobile) return;
+      this.onKeyUp();
+    }
+    document.ontouchstart = () => {
+      this.isMobile = true;
+      this.onKeyDown();
+    }
+    document.ontouchend = () => {
+      this.isMobile = true;
+      this.onKeyUp();
+    }
 
     this.update(context);
   },
