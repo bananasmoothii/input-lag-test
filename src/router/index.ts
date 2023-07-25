@@ -25,8 +25,13 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = "Input Lag Test";
+  next()
+});
 
 export default router
