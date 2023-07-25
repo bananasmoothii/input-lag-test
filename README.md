@@ -1,4 +1,11 @@
-# input-lag-test
+# [Input Lag Test](https://input-lag-test.theamplifiedbananabubble.fr)
+
+Hosted at https://input-lag-test.theamplifiedbananabubble.fr
+
+A small utility website that allows to test the time between when you click on
+                                      any button and when you actually see the result. This test is not very precise,
+                                      as it depends on your accuracy.
+
 
 ## Project setup
 ```
