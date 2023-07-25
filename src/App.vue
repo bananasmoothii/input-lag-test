@@ -9,7 +9,7 @@
         <img alt="Bootstrap" class="mx-3" height="27" src="@/assets/logo.svg" width="27">
         <span>Input Lag Test</span>
       </RouterLink>
-      <div class="text-secondary">
+      <div class="text-secondary ms-auto">
         Made by <a class="git-profile-link text-secondary" href="https://github.com/bananasmoothii">Bananasmoothii</a>
         <a href="https://github.com/bananasmoothii/input-lag-test">
           <img alt="GitHub" class="mx-3" height="27.2" src="@/assets/github-mark.svg" width="27.2">
