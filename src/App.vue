@@ -1,5 +1,16 @@
 <script lang="ts">
+import {defineComponent} from 'vue';
 
+export default defineComponent({
+  name: 'App',
+
+  mounted() {
+    const noscript = document.querySelectorAll('noscript');
+    noscript.forEach((element) => {
+      element.remove();
+    });
+  }
+});
 </script>
 
 <template>
